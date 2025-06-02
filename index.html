@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Super Uzum Market</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header" style="background-image: url('https://images.unsplash.com/photo-1557683316-973673baf926?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80')">
+    <div class="container">
+      <h1 class="logo">Super Uzum Market</h1>
+      <nav class="nav">
+        <button onclick="toggleSidebar()" class="nav-btn">Katalog</button>
+        <button onclick="toggleCartModal()" class="cart-btn">Savat (<span id="cart-count">0</span>)</button>
+        <button onclick="toggleProfileModal()" class="profile-btn">Profil</button>
+      </nav>
+      <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
+    </div>
+  </header>
+
+  <!-- Sidebar -->
+  <div id="sidebar" class="sidebar">
+    <div class="sidebar-header">
+      <h2>Kategoriyalar</h2>
+      <button onclick="toggleSidebar()">X</button>
+    </div>
+    <ul>
+      <li><a href="#elektronika" onclick="filterProducts('elektronika')">Elektronika</a></li>
+      <li><a href="#kiyim" onclick="filterProducts('kiyim')">Kiyim-kechak</a></li>
+      <li><a href="#uy" onclick="filterProducts('uy')">Uy-ro'zg'or buyumlari</a></li>
+      <li><a href="#sport" onclick="filterProducts('sport')">Sport anjomlari</a></li>
+      <li><a href="#all" onclick="filterProducts('all')">Barchasi</a></li>
+    </ul>
+  </div>
+
+  <!-- Profile Modal -->
+  <div id="profile-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="toggleProfileModal()">×</span>
+      <h2>Foydalanuvchi Profili</h2>
+      <div class="form-group">
+        <label for="profile-first-name">Ism:</label>
+        <input type="text" id="profile-first-name" required>
+      </div>
+      <div class="form-group">
+        <label for="profile-last-name">Familiya:</label>
+        <input type="text" id="profile-last-name" required>
+      </div>
+      <div class="form-group">
+        <label for="profile-phone">Telefon raqami:</label>
+        <input type="tel" id="profile-phone" required>
+      </div>
+      <div class="form-group">
+        <label for="profile-sms-code">SMS kod:</label>
+        <input type="text" id="profile-sms-code" required>
+        <button onclick="generateSMSCode()">Kod yuborish</button>
+      </div>
+      <button class="btn btn-purple" onclick="saveProfile()">Saqlash</button>
+    </div>
+  </div>
+
+  <!-- Cart Modal -->
+  <div id="cart-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="toggleCartModal()">×</span>
+      <h2>Savat</h2>
+      <div id="cart-items"></div>
+      <p id="cart-total" class="total">Jami: $0.00</p>
+      <h3>Buyurtma ma'lumotlari</h3>
+      <p><strong>Ism:</strong> <span id="cart-first-name"></span> <span id="cart-last-name"></span></p>
+      <p><strong>Telefon:</strong> <span id="cart-phone"></span> <button onclick="toggleProfileModal()" class="btn btn-small">O'zgartirish</button></p>
+      <div class="form-group">
+        <label for="address">Manzil:</label>
+        <select id="address" required>
+          <option value="">Tanlang</option>
+          <option value="Chilanzar">Chilanzar</option>
+          <option value="Mirzo Ulug'bek">Mirzo Ulug'bek</option>
+          <option value="Yunusabad">Yunusabad</option>
+          <option value="Sergeli">Sergeli</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="payment">To'lov usuli:</label>
+        <select id="payment" onchange="toggleCardDetails()" required>
+          <option value="">Tanlang</option>
+          <option value="cash">Naqd</option>
+          <option value="card">Karta</option>
+        </select>
+      </div>
+      <div id="card-details" class="form-group hidden">
+        <label for="card-number">Karta raqami:</label>
+        <input type="text" id="card-number" placeholder="1234 5678 9012 3456">
+        <label for="card-expiry">MM/YY:</label>
+        <input type="text" id="card-expiry" placeholder="MM/YY">
+      </div>
+      <button class="btn btn-green" onclick="submitOrder()">Buyurtma berish</button>
+    </div>
+  </div>
+
+  <!-- Chek Modal -->
+  <div id="chek-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="toggleChekModal()">×</span>
+      <h2>Buyurtma cheki</h2>
+      <div id="chek-details"></div>
+    </div>
+  </div>
+
+  <!-- Catalog -->
+  <section id="catalog" class="catalog">
+    <div class="container">
+      <h2 class="section-title">Mahsulotlar Katalogi</h2>
+      <div class="product-grid" id="product-grid"></div>
+    </div>
+  </section>
+
+  <!-- Profile -->
+  <section id="profile" class="profile">
+    <div class="container">
+      <h2 class="section-title">Foydalanuvchi Profili</h2>
+      <div class="profile-card">
+        <p><strong>Ism:</strong> <span id="profile-display-first-name">Foydalanuvchi</span></p>
+        <p><strong>Familiya:</strong> <span id="profile-display-last-name">Familiyasi</span></p>
+        <p><strong>Telefon:</strong> <span id="profile-display-phone">+998 90 123 45 67</span></p>
+        <p><strong>Manzil:</strong> Toshkent, O'zbekiston</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <h3>Super Uzum Market</h3>
+          <p>Eng yaxshi mahsulotlar, eng yaxshi narxlar va tezkor yetkazib berish!</p>
+        </div>
+        <div>
+          <h3>Foydali Havolalar</h3>
+          <ul>
+            <li><a href="#about">Biz haqimizda</a></li>
+            <li><a href="#contact">Bog'lanish</a></li>
+            <li><a href="#faq">FAQ</a></li>
+            <li><a href="#terms">Foydalanish shartlari</a></li>
+          </ul>
+        </div>
+        <div>
+          <h3>Biz bilan bog'laning</h3>
+          <p>Email: support@superuzum.uz</p>
+          <p>Telefon: +998 71 123 45 67</p>
+          <p>Manzil: Toshkent, Chilanzar, 45A</p>
+        </div>
+        <div>
+          <h3>Bizni Kuzating</h3>
+          <div class="social-links">
+            <a href="#facebook">Facebook</a>
+            <a href="#instagram">Instagram</a>
+            <a href="#telegram">Telegram</a>
+          </div>
+        </div>
+      </div>
+      <p class="footer-bottom">© 2025 Super Uzum Market. Barcha huquqlar himoyalangan.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
